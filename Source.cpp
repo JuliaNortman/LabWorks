@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "stack"
 
 using namespace std;
@@ -26,12 +27,12 @@ public:
 	void ArrDfs(int, bool*);
 	bool connected(); //check if graph is connected
 	int arrDistance(int, int);
-	void print();
 	int listDistance(int, int);
-	Graph(); // constructor
+	void print();
+	Graph(string); // constructor
 	~Graph(); //destructor
 
-}g;
+};
 
 //bool visited[] - visited array
 //adj[] - adj list
@@ -40,7 +41,7 @@ public:
 
 int Graph::listDistance(int u, int v)
 {
-	if (u == v) return;
+	if (u == v) return 0;
 	if (u < 0 || u>MaxN || v < 0 || v > MaxN) return -1;
 	stack <int> s;
 	bool *visited = new bool[MaxN];
@@ -112,8 +113,7 @@ bool Graph::connected()
 		if (!visited[i])
 		{
 			c++;
-			if (adj) ListDfs(i, visited);
-			else ArrDfs(i, visited);
+			ArrDfs(i, visited);
 		}
 	}
 	if (c > 1) return false;
@@ -164,14 +164,16 @@ int Graph::arrDistance(int u, int v)
 	}
 	return n;
 }
-Graph::Graph()
+Graph::Graph(string fname)
 {
-	errno_t err = fopen_s(&f, "Arr.bin", "r+b");
+	errno_t err = fopen_s(&f, fname.c_str(), "r+b");
 	fread(&MaxN, sizeof(int), 1, f);
 	arr = new int*[MaxN];
+	adj = new listp[MaxN];
 	for (int i = 0; i < MaxN; ++i)
 	{
 		arr[i] = new int[MaxN];
+		adj[i] = nullptr;
 	}
 	int k = 0;
 	for (int i = 0; i < MaxN; i++)
@@ -180,37 +182,34 @@ Graph::Graph()
 		{
 			fread(&k, sizeof(int), 1, f);
 			arr[i][j] = k;
+			if (k == 1)
+			{
+				listp p = new listn;
+				p->n = j;
+				p->next = adj[i];
+				adj[i] = p;
+			}
 		}
 	}
 	fclose(f);
 
-	err = fopen_s(&f, "List.bin", "r+b");
-	adj = new listp[MaxN];
-	for (int i = 0; i < MaxN; i++) adj[i] = nullptr;
-	fread(&MaxN, sizeof(int), 1, f);
-	for (int i = 0; i < MaxN; i++)
-	{
-		int m = 0;
-		fread(&m, sizeof(int), 1, f);
-		for (int j = 0; j < m; j++)
-		{
-			listp p = new listn;
-			p->next = adj[i];
-			fread(&p->n, sizeof(int), 1, f);
-		}
-
-	}
-	fclose(f);
 }
 
 Graph:: ~Graph()
 {
+	listp p, t;
 	for (int i = 0; i < MaxN; ++i)
 	{
 		delete arr[i];
+		p = adj[i];
+		while (p)
+		{
+			t = p;
+			p = p->next;
+			delete t;
+		}
 	}
-	delete[]  arr;
-
+	delete[] arr;
 	delete[] adj;
 }
 void Graph::print()
@@ -223,16 +222,30 @@ void Graph::print()
 		}
 		cout << endl;
 	}
+	cout << endl << "******" << endl;
+	listp p = nullptr;
+	for (int i = 0; i < MaxN; ++i)
+	{
+		p = adj[i];
+		cout << i << ": ";
+		while (p)
+		{
+			cout << p->n << ", ";
+			p = p->next;
+		}
+		cout << endl;
+	}
 }
 
 
 int main()
 {
+	Graph g("Arr.bin");
 	g.print();
 	bool connect = g.connected();
 	if (connect) cout << "Graph is connected" << endl;
 	else cout << "Graph is not connected" << endl;
-	int l = g.arrDistance(0, 4);
+	int l = g.listDistance(0, 4);
 	cout << "Distance is : " << l << endl;
 	system("pause");
 	return 0;
