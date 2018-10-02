@@ -21,6 +21,7 @@ public:
 	double area();
 };
 
+
 quadrangle::quadrangle()
 {
 	n = 4;

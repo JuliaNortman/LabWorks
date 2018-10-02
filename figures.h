@@ -4,11 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 
-/*
-#include "figures.h"
-#include "triangle.h"
-#include "quadrangle.h"
-#include "pentagon.h"*/
 
 using namespace std;
 
