@@ -1,11 +1,7 @@
 #pragma once
-#include <iostream>
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
 #include "figures.h"
 
-using namespace std;
+
 
 class quadrangle :public figures
 {
@@ -19,8 +15,17 @@ public:
 	bool isRectangle();
 	bool isSquare();
 	double area();
+	void formEdges();
 };
 
+void quadrangle::formEdges()
+{
+
+	e[0] = length(v[0], v[1]);
+	e[1] = length(v[1], v[2]);
+	e[2] = length(v[2], v[3]);
+	e[3] = length(v[3], v[0]);
+}
 
 quadrangle::quadrangle()
 {
@@ -34,10 +39,7 @@ quadrangle::quadrangle()
 		srand(time(NULL) + i + 10);
 		v[i].y = rand() % 60;
 	}
-	e[0] = length(v[0], v[1]);
-	e[1] = length(v[1], v[2]);
-	e[2] = length(v[2], v[3]);
-	e[3] = length(v[3], v[0]);
+	formEdges();
 }
 
 quadrangle::quadrangle(point vert[])
@@ -49,10 +51,7 @@ quadrangle::quadrangle(point vert[])
 	{
 		v[i] = vert[i];
 	}
-	e[0] = length(v[0], v[1]);
-	e[1] = length(v[1], v[2]);
-	e[2] = length(v[2], v[3]);
-	e[3] = length(v[3], v[0]);
+	formEdges();
 }
 
 quadrangle::~quadrangle()
@@ -63,7 +62,7 @@ quadrangle::~quadrangle()
 
 bool quadrangle::isTrapeze()
 {
-	if (isFigure())
+	if (TriangleInequality())
 	{
 		if (abs(abs(scalar(v[2], v[1], v[3], v[0])) - e[1] * e[3]) <= eps)
 		{
@@ -79,9 +78,11 @@ bool quadrangle::isTrapeze()
 
 bool quadrangle::isParallelogram()
 {
-	if (isFigure())
+	if (TriangleInequality())
 	{
-		if (abs(scalar(v[2], v[1], v[3], v[0]) - e[1] * e[3]) <= eps && abs(scalar(v[0], v[1], v[3], v[2]) - e[0] * e[2]) <= eps) return true;
+		double sc1 = scalar(v[2], v[1], v[3], v[0]) - e[1] * e[3];
+		double sc2 = scalar(v[0], v[1], v[3], v[2]) - e[0] * e[2];
+		if (abs(sc1 <= eps) && abs(sc2 <= eps)) return true;
 	}
 	return false;
 }
@@ -126,6 +127,8 @@ double quadrangle::area()
 	{
 		double p1 = (l + e[0] + e[1]) / 2;
 		double p2 = (l + e[2] + e[3]) / 2;
-		return sqrt(p1*(p1 - e[0])*(p1 - e[1])*(p1 - l)) + sqrt(p2*(p2 - e[2])*(p2 - e[3])*(p2 - l));
+		double s1 = sqrt(p1*(p1 - e[0])*(p1 - e[1])*(p1 - l));
+		double s2 = sqrt(p2*(p2 - e[2])*(p2 - e[3])*(p2 - l));
+		return s1 + s2;
 	}
 }

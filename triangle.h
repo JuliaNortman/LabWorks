@@ -1,22 +1,11 @@
 #pragma once
-#include <iostream>
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
 #include "figures.h"
 
-using namespace std;
+//using namespace std;
 
 class triangle :public figures
 {
 public:
-	void print()
-	{
-		for (int i = 0; i < n; ++i)
-		{
-			cout << "I: " << i << " " << e[i] << endl;
-		}
-	}
 	triangle();
 	triangle(point vert[]);
 	~triangle();
@@ -24,7 +13,16 @@ public:
 	bool isIsoscelesTriange(); //равнобедренный
 	bool isEquilateral(); //равнобедренный
 	double area();
+	void formEdges();
 };
+
+
+void triangle::formEdges()
+{
+	e[0] = length(v[0], v[1]);
+	e[1] = length(v[1], v[2]);
+	e[2] = length(v[2], v[0]);
+}
 
 triangle::triangle()
 {
@@ -38,9 +36,7 @@ triangle::triangle()
 		srand(time(NULL) + i + 10);
 		v[i].y = rand() % 10;
 	}
-	e[0] = length(v[0], v[1]);
-	e[1] = length(v[1], v[2]);
-	e[2] = length(v[2], v[0]);
+	formEdges();
 }
 
 triangle::triangle(point vert[])
@@ -52,14 +48,12 @@ triangle::triangle(point vert[])
 	{
 		v[i] = vert[i];
 	}
-	e[0] = length(v[0], v[1]);
-	e[1] = length(v[1], v[2]);
-	e[2] = length(v[2], v[0]);
+	formEdges();
 }
 
 bool triangle::isRightTriangle()
 {
-	if (isFigure())
+	if (TriangleInequality())
 	{
 		if (isRightAngle(v[0], v[1], v[2])) return true;
 		else if (isRightAngle(v[2], v[0], v[1])) return true;
@@ -70,7 +64,7 @@ bool triangle::isRightTriangle()
 
 bool triangle::isIsoscelesTriange()
 {
-	if (isFigure())
+	if (TriangleInequality())
 	{
 		if (abs(e[0] - e[1]) <= eps || abs(e[0] - e[2]) <= eps || abs(e[1] - e[2]) <= eps) return true;
 	}
@@ -79,7 +73,7 @@ bool triangle::isIsoscelesTriange()
 
 bool triangle::isEquilateral()
 {
-	if (isFigure() && abs(e[0] - e[1]) <= eps && abs(e[0] - e[2]) <= eps) return true;
+	if (TriangleInequality() && abs(e[0] - e[1]) <= eps && abs(e[0] - e[2]) <= eps) return true;
 	return false;
 }
 

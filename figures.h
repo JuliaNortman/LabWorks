@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
-#include <math.h>
+#include <fstream>
+#include <string>
+#include <stack>
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 
-
-using namespace std;
 
 struct point
 {
@@ -20,22 +21,22 @@ protected:
 	double *e; //length of edges
 	const double eps = 0.01;
 public:
-	double length(point a, point b);
-	bool isFigure();
+	friend double length(point a, point b);
+	bool TriangleInequality();
 	double perimeter();
 	bool isRightAngle(point a, point b, point c);
 	void setZero();
-	double scalar(point a, point b, point c, point d);
+	friend double scalar(point a, point b, point c, point d);
 	void print();
 };
 
 
-inline double figures::length(point a, point b)
+inline double length(point a, point b)
 {
 	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 
-bool figures::isFigure()
+bool figures::TriangleInequality()
 {
 	double length = 0;
 	for (int i = 0; i < n; ++i)
@@ -58,7 +59,7 @@ bool figures::isFigure()
 	}
 	return true;
 }
-double figures::scalar(point a, point b, point c, point d)
+double scalar(point a, point b, point c, point d)
 {
 	return ((a.x - b.x)*(c.x - d.x) + (a.y - b.y)*(c.y - d.y));
 }
@@ -93,10 +94,10 @@ void figures::print()
 {
 	for (int i = 0; i < n; ++i)
 	{
-		cout << "X: " << v[i].x << " Y: " << v[i].y << endl;
+		std::cout << "X: " << v[i].x << " Y: " << v[i].y << std::endl;
 	}
 	for (int i = 0; i < n; ++i)
 	{
-		cout << "E: " << e[i] << endl;
+		std::cout << "E: " << e[i] << std::endl;
 	}
 }
