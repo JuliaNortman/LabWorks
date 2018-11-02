@@ -21,5 +21,17 @@ void MainWindow::on_ModelButton_clicked()
         c->setModal(true);
         c->exec();
     }
+    if(ui->ChooseProb->currentText() == "Dices")
+    {
+        d = new Dice();
+        d->setModal(true);
+        d->exec();
+    }
+    if(ui->ChooseProb->currentText() == "Cards")
+    {
+        card = new Card();
+        card->setModal(true);
+        card->exec();
+    }
 }
 

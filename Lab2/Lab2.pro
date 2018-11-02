@@ -25,15 +25,21 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    coins.cpp
+    coins.cpp \
+    dice.cpp \
+    card.cpp
 
 HEADERS += \
         mainwindow.h \
-    coins.h
+    coins.h \
+    dice.h \
+    card.h
 
 FORMS += \
         mainwindow.ui \
-    coins.ui
+    coins.ui \
+    dice.ui \
+    card.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

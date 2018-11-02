@@ -2,10 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QSpinBox>
 #include "coins.h"
+#include "dice.h"
+#include "card.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +24,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Coins *c;
+    Dice *d;
+    Card *card;
 };
 
 
