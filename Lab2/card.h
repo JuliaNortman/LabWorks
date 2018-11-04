@@ -15,8 +15,14 @@ public:
     explicit Card(QWidget *parent = nullptr);
     ~Card();
 
+private slots:
+    void on_cardModelButton_clicked();
+
 private:
     Ui::Card *ui;
+    bool *taken;
+    void Model(int);
+    void cardChosen(int);
 };
 
 #endif // CARD_H

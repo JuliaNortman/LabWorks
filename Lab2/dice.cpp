@@ -8,6 +8,14 @@ Dice::Dice(QWidget *parent) :
     ui(new Ui::Dice)
 {
     ui->setupUi(this);
+    QPixmap redPix("D:/VSprojects/LabWorks/Lab2/FlyingDices.png");
+    ui->RedDice->setPixmap(redPix);
+    ui->RedDice->setScaledContents(true);
+
+    QPixmap greenPix("D:/VSprojects/LabWorks/Lab2/GreenDices.png");
+    ui->GreenDice->setPixmap(greenPix);
+    ui->GreenDice->setScaledContents(true);
+
     ui->diceModelButton->setEnabled(false);
     ui->diceResult->hide();
     prob = new int[6];
@@ -121,7 +129,6 @@ void Dice::Model(int n)
     for(int i = 1; i <= n; ++i)
     {
         int r = qrand() % 100 + 1;
-        ui->diceResult->QTextEdit::append("Random: " + QString::number(r) + " ");
         int j = 0;
         for(j = 0; j<6; ++j)
         {
