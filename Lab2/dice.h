@@ -2,6 +2,7 @@
 #define DICE_H
 
 #include <QDialog>
+#include <QMovie>
 
 namespace Ui {
 class Dice;
@@ -30,11 +31,17 @@ private slots:
 
     void on_diceModelButton_clicked();
 
+    void hideGif();
+
+    void on_statisticsButton_clicked();
+
 private:
     Ui::Dice *ui;
     void ifClicked(int, int, int);
     void Model(int);
     int *prob;
+    QMovie *mo;
+    int *statistics;
 };
 
 #endif // DICE_H

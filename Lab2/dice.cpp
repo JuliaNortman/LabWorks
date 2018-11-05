@@ -2,27 +2,43 @@
 #include "ui_dice.h"
 #include <QRandomGenerator>
 #include <QDateTime>
+#include <QMovie>
+#include <QTimer>
+#include <QMessageBox>
 
 Dice::Dice(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dice)
 {
     ui->setupUi(this);
-    QPixmap redPix("D:/VSprojects/LabWorks/Lab2/FlyingDices.png");
+
+    Dice::setWindowIcon(QIcon("Images/diceIcon.png"));
+
+    mo = new QMovie();
+    mo->setFileName("Images/DicesAnimation.gif");
+    ui->diceGif->setMovie(mo);
+    ui->diceGif->hide();
+
+    QPixmap redPix("Images/FlyingDices.png");
     ui->RedDice->setPixmap(redPix);
     ui->RedDice->setScaledContents(true);
 
-    QPixmap greenPix("D:/VSprojects/LabWorks/Lab2/GreenDices.png");
+    QPixmap greenPix("Images/GreenDices.png");
     ui->GreenDice->setPixmap(greenPix);
     ui->GreenDice->setScaledContents(true);
 
     ui->diceModelButton->setEnabled(false);
     ui->diceResult->hide();
     prob = new int[6];
+    statistics = new int[6];
+    ui->statisticsButton->hide();
 }
 
 Dice::~Dice()
 {
+    delete [] prob;
+    delete [] statistics;
+    delete mo;
     delete ui;
 }
 
@@ -122,9 +138,29 @@ void Dice::on_side6_valueChanged(int arg1)
     ifClicked(x, y, z);
 }
 
+void Dice::hideGif()
+{
+    mo->stop();
+    ui->diceGif->hide();
+    ui->diceResult->show();
+    ui->statisticsButton->show();
+}
+
 void Dice::Model(int n)
 {
-    ui->diceResult->show();
+    for(int i = 0; i < 6; ++i)
+    {
+        statistics[i] = 0;
+    }
+
+    ui->diceResult->hide();
+    ui->diceGif->show();
+    mo->start();
+
+    QTimer *tmr = new QTimer;
+    tmr->start(2600);
+    QTimer::singleShot(2600, this, SLOT(hideGif()));
+
     qsrand(QDateTime::currentMSecsSinceEpoch());
     for(int i = 1; i <= n; ++i)
     {
@@ -134,13 +170,10 @@ void Dice::Model(int n)
         {
             if(r <= prob[j])
             {
-                ui->diceResult->QTextEdit::append(QString::number(j+1) + " ");
+                ui->diceResult->QTextEdit::append("Side: " + QString::number(j+1));
+                statistics[j]++;
                 break;
             }
-        }
-        if(j == 6)
-        {
-            ui->diceResult->QTextEdit::append(QString::number(j+1) + " ");
         }
     }
 }
@@ -150,4 +183,24 @@ void Dice::on_diceModelButton_clicked()
     ui->diceResult->clear();
     int n = ui->diceQuantaty->value();
     Model(n);
+}
+
+
+
+void Dice::on_statisticsButton_clicked()
+{
+    QString mes = "Number of experiments: "  + QString::number(ui->diceQuantaty->value()) + "\n";
+    QString mes1 = "Side1: " + QString::number(statistics[0]) + "\n";
+    QString mes2 = "Side2: " + QString::number(statistics[1]) + "\n";
+    QString mes3 = "Side3: " + QString::number(statistics[2]) + "\n";
+    QString mes4 = "Side4: " + QString::number(statistics[3]) + "\n";
+    QString mes5 = "Side5: " + QString::number(statistics[4]) + "\n";
+    QString mes6 = "Side6: " + QString::number(statistics[5]) + "\n";
+    QMessageBox *st = new QMessageBox;
+    st->setWindowIcon(QIcon("Images/Statistics.png"));
+    st->setText(mes+mes1+mes2+mes3+mes4+mes5+mes6);
+    st->setWindowTitle("Statistics");
+    st->setIcon(QMessageBox::Information);
+    st->exec();
+    delete st;
 }

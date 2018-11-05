@@ -18,20 +18,17 @@ void MainWindow::on_ModelButton_clicked()
     if(ui->ChooseProb->currentText() == "Coins")
     {
         c = new Coins();
-        c->setModal(true);
-        c->exec();
+        c->show();
     }
     if(ui->ChooseProb->currentText() == "Dices")
     {
         d = new Dice();
-        d->setModal(true);
-        d->exec();
+        d->show();
     }
     if(ui->ChooseProb->currentText() == "Cards")
     {
         card = new Card();
-        card->setModal(true);
-        card->exec();
+        card->show();
     }
 }
 

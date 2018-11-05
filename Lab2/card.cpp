@@ -2,35 +2,49 @@
 #include <QDateTime>
 #include "card.h"
 #include "ui_card.h"
-#include <QDebug>
+#include <QTime>
+#include <QTimer>
 
 Card::Card(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Card)
 {
     ui->setupUi(this);
+    Card::setWindowIcon(QIcon("Images/Clubs.png"));
+    ui->cardResult->hide();
 
-   //qDebug() << QApplication::applicationDirPath();
+    mo = new QMovie();
+    mo->setFileName("Images/cardAnimation.gif");
+    ui->cardGif->setMovie(mo);
+    ui->cardGif->hide();
 
-    QPixmap spadePix("D:/VSprojects/LabWorks/Lab2/Spade.png");
+
+    QPixmap spadePix("Images/Spade.png");
     ui->spade->setPixmap(spadePix);
     ui->spade->setScaledContents(true);
 
-    QPixmap diamondPix("D:/VSprojects/LabWorks/Lab2/Diamond.png");
+
+    QPixmap diamondPix("Images/Diamond.png");
     ui->diamond->setPixmap(diamondPix);
     ui->diamond->setScaledContents(true);
 
-    QPixmap heartPix("D:/VSprojects/LabWorks/Lab2/Heart.png");
+    QPixmap heartPix("Images/Heart.png");
     ui->hearts->setPixmap(heartPix);
     ui->hearts->setScaledContents(true);
 
-    QPixmap clubPix("D:/VSprojects/LabWorks/Lab2/Clubs.png");
+    QPixmap clubPix("Images/Clubs.png");
     ui->club->setPixmap(clubPix);
     ui->club->setScaledContents(true);
+
+    taken = new bool [36];
+    n = 0;
+    ui->nextButton->hide();
 }
 
 Card::~Card()
 {
+    delete mo;
+    delete [] taken;
     delete ui;
 }
 
@@ -38,7 +52,7 @@ void Card::cardChosen(int r)
 {
     if(r < 9)
     {
-        ui->cardResult->QTextEdit::append("Hearts");
+        ui->cardResult->QTextEdit::append("<span style=' font-style:b; color:red;'>Hearts </span");
     }
     else if(r < 18)
     {
@@ -46,7 +60,7 @@ void Card::cardChosen(int r)
     }
     else if(r < 27)
     {
-        ui->cardResult->QTextEdit::append("Diamonds ");
+        ui->cardResult->QTextEdit::append("<span style=' font-style:b; color:red;'>Diamonds </span");
     }
     else
     {
@@ -100,16 +114,40 @@ void Card::Model(int n)
 
 }
 
+void Card::hideGif()
+{
+    mo->stop();
+    ui->cardGif->hide();
+    ui->cardResult->show();
+}
+
 void Card::on_cardModelButton_clicked()
 {
+    ui->cardResult->hide();
+    ui->cardGif->show();
+    mo->start();
+
+    QTimer *tmr = new QTimer;
+    tmr->start(1750);
+    QTimer::singleShot(1750, this, SLOT(hideGif()));
+
+    delete [] taken;
     taken = new bool[36];
     for(int i = 0; i < 36; ++i)
     {
         taken[i] = false;
     }
+    n = 0;
     ui->cardResult->clear();
-    ui->cardResult->append("Path: " + QApplication::applicationDirPath());
-    int n = ui->cardQuantaty->value();
-    Model(n);
-    delete [] taken;
+    n += n + ui->cardQuantaty->value();
+    Model(ui->cardQuantaty->value());
+    ui->nextButton->show();
+    ui->nextButton->setEnabled(n < 36);
+}
+
+void Card::on_nextButton_clicked()
+{
+    n++;
+    Model(1);
+    ui->nextButton->setEnabled(n < 36);
 }
