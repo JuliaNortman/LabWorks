@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QMessageBox>
 
+
 Dice::Dice(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dice)

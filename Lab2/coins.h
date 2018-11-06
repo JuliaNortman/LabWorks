@@ -9,6 +9,7 @@ namespace Ui {
 class Coins;
 }
 
+
 class Coins : public QDialog
 {
     Q_OBJECT

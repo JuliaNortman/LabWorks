@@ -1,7 +1,7 @@
-#include <QRandomGenerator>
-#include <QDateTime>
 #include "card.h"
 #include "ui_card.h"
+#include <QRandomGenerator>
+#include <QDateTime>
 #include <QTime>
 #include <QTimer>
 

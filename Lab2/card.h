@@ -8,6 +8,7 @@ namespace Ui {
 class Card;
 }
 
+
 class Card : public QDialog
 {
     Q_OBJECT

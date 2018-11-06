@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "coins.h"
 #include "dice.h"
 #include "card.h"
+#include <QMainWindow>
 
 namespace Ui {
 class MainWindow;

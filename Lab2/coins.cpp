@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QTimer>
 
+
 Coins::Coins(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Coins)

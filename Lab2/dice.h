@@ -8,6 +8,7 @@ namespace Ui {
 class Dice;
 }
 
+
 class Dice : public QDialog
 {
     Q_OBJECT
