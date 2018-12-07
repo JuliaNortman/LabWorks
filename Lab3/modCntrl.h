@@ -17,6 +17,9 @@ public:
 	~modCntrl();
 	void output();
 	void countS();
+	void countP();
+	void countA();
+	void countResult();
 private:
 	int n; // dimension of matrix A
 	int m; // columns of matrix B
@@ -24,7 +27,9 @@ private:
 	vector<int> l; // eigenvector
 	MatrixXd A;
 	MatrixXd B;
+	VectorXd C;
 	MatrixXd S;
 	VectorXd p;
+	VectorXd a;
 };
 

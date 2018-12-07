@@ -24,6 +24,17 @@ modCntrl::modCntrl()
 			cin >> B(i, j);
 		}
 	}
+	cout << "Enter lambda: ";
+	for (int i = 0; i < n; ++i)
+	{
+		int k = 0;
+		cin >> k;
+		l.push_back(k);
+		l[i] *= (-1);
+	}
+	p = VectorXd(n);
+	a = VectorXd(n);
+	C = VectorXd(n);
 }
 
 
@@ -68,7 +79,60 @@ void modCntrl::countS()
 	S = S.inverse();
 }
 
+void modCntrl::countP()
+{
+	MatrixXd tmp(n, n);
+	tmp = A;
+	for (int i = 2; i <= n; ++i)
+	{
+		tmp = tmp * A;
+	}
+	VectorXd ptmp(n);
+	ptmp = (S*tmp)*B*(-1);
+	for (int i = n - 1; i >= 0; --i)
+	{
+		p(n-i-1) = ptmp(i);
+	}
+	VectorXd pMinA(n);
+	pMinA = p - a;
+	C = S * ptmp * pMinA;
+}
+
+void modCntrl::countA()
+{
+	a(0) = l[0] + l[1];
+	a(1) = l[0] * l[1];
+	for (int i = 1; i <= n; ++i)
+	{
+
+	}
+}
+
+void modCntrl::countResult()
+{
+	S.transposeInPlace();
+	MatrixXd tmp(n, n);
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (i == j)
+			{
+				tmp(i, j) = 1;
+			}
+			else if (j > i)
+			{
+				tmp(i, j) = 0;
+			}
+			else
+			{
+				tmp(i, j) = p(i - j - 1);
+			}
+		}
+	}
+}
+
 void modCntrl::output()
 {
-	cout << S;
+	cout << C;
 }

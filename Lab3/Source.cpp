@@ -9,6 +9,9 @@ int main()
 	modCntrl mc;
 	//mc.output();
 	mc.countS();
+	mc.countP();
+	mc.countA();
+	mc.countResult();
 	std::cout << std::endl;
 	mc.output();
 	system("pause");
