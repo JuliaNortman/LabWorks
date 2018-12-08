@@ -1,11 +1,11 @@
 #include "modCntrl.h"
 
 
-
 modCntrl::modCntrl()
 {
 	cout << "Enter the dimension of matrix A: ";
 	cin >> n;
+	cout << "Enter matrix A:" << std::endl;
 	A = MatrixXd(n, n);
 	for (int i = 0; i < n; ++i)
 	{
@@ -16,6 +16,7 @@ modCntrl::modCntrl()
 	}
 	cout << "Enter the number of columns of matrix B: ";
 	cin >> m;
+	cout << "Enter matrix B:" << std::endl;
 	B = MatrixXd(n, m);
 	for (int i = 0; i < n; ++i)
 	{
@@ -24,7 +25,7 @@ modCntrl::modCntrl()
 			cin >> B(i, j);
 		}
 	}
-	cout << "Enter lambda: ";
+	cout << "Enter the roots of the characteristic equation:"  << std::endl;
 	for (int i = 0; i < n; ++i)
 	{
 		int k = 0;
@@ -93,18 +94,28 @@ void modCntrl::countP()
 	{
 		p(n-i-1) = ptmp(i);
 	}
-	VectorXd pMinA(n);
-	pMinA = p - a;
-	C = S * ptmp * pMinA;
 }
 
 void modCntrl::countA()
 {
-	a(0) = l[0] + l[1];
-	a(1) = l[0] * l[1];
-	for (int i = 1; i <= n; ++i)
+	if (n == 2)
 	{
-
+		a(0) = l[0] + l[1];
+		a(1) = l[0] * l[1];
+	}
+	else if (n == 3)
+	{
+		a(0) = l[0] + l[1] + l[2];
+		a(1) = l[0] * l[1] + l[0] * l[2] + l[1] * l[2];
+		a(2) = l[0] * l[1] * l[2];
+	}
+	else if (n == 4)
+	{
+		a(0) = l[0] + l[1] + l[2] + l[3];
+		a(1) = l[0] * l[1] + l[0] * l[2] + l[1] * l[2];
+		a(1) = a(1) + l[0] * l[3] + l[1] * l[3] + l[2] * l[3];
+		a(2) = l[0] * l[1] * l[2] + l[0] * l[1] * l[3] + l[1] * l[2] * l[3];
+		a(3) = l[0] * l[1] * l[2] * l[3];
 	}
 }
 
@@ -130,9 +141,24 @@ void modCntrl::countResult()
 			}
 		}
 	}
+
+	VectorXd pMinA(n);
+	pMinA = p - a;
+	C = S * tmp * pMinA;
 }
 
 void modCntrl::output()
 {
-	cout << C;
+	cout << "Result: " << std::endl;
+	cout << "u(t) = ";
+	for (int i = 0; i < n; ++i)
+	{
+		cout << C(i);
+		cout << "*x" << i + 1 << "(t)";
+		if (i != n - 1)
+		{
+			cout << " + ";
+		}
+	}
+	cout << std::endl;
 }
